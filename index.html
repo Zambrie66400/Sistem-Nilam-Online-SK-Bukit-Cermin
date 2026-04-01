@@ -1,0 +1,1496 @@
+<!doctype html>
+<html lang="ms" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Nilam SK Bukit Cermin</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #3d7ab5 100%); }
+    .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .nav-item { transition: all 0.3s ease; }
+    .nav-item:hover { transform: translateX(5px); }
+    .nav-item.active { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+    .stat-card { transition: transform 0.3s ease; }
+    .stat-card:hover { transform: translateY(-5px); }
+    .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .table-row:hover { background: #f8fafc; }
+    .progress-bar { transition: width 0.5s ease; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gray-50">
+  <div id="app" class="h-full flex">
+   <!-- Sidebar -->
+   <aside id="sidebar" class="w-64 gradient-bg text-white flex flex-col min-h-full">
+    <div class="p-5 border-b border-white/20">
+     <div class="flex items-center gap-3">
+      <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+       <i data-lucide="book-open" class="w-7 h-7"></i>
+      </div>
+      <div>
+       <h1 id="app-title" class="font-bold text-sm leading-tight">SISTEM NILAM</h1>
+       <p id="school-name" class="text-xs text-blue-200">SK BUKIT CERMIN</p>
+      </div>
+     </div>
+    </div>
+    <nav class="flex-1 p-4 space-y-2">
+     <button onclick="showPage('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-dashboard"> <i data-lucide="layout-dashboard" class="w-5 h-5"></i> <span class="font-medium">Dashboard</span> </button> <button onclick="showPage('pengurusan')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-pengurusan"> <i data-lucide="users" class="w-5 h-5"></i> <span class="font-medium">Pengurusan</span> </button> <button onclick="showPage('bahan-bacaan')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-bahan-bacaan"> <i data-lucide="library" class="w-5 h-5"></i> <span class="font-medium">Bahan Bacaan</span> </button> <button onclick="showPage('rekod-pembacaan')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-rekod-pembacaan"> <i data-lucide="book-marked" class="w-5 h-5"></i> <span class="font-medium">Rekod Pembacaan</span> </button> <button onclick="showPage('rekod-bacaan')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-rekod-bacaan"> <i data-lucide="table" class="w-5 h-5"></i> <span class="font-medium">Rekod Bacaan</span> </button> <button onclick="showPage('cetakan')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left" id="nav-cetakan"> <i data-lucide="printer" class="w-5 h-5"></i> <span class="font-medium">Cetakan</span> </button>
+    </nav>
+    <div class="p-4 border-t border-white/20">
+     <div class="bg-white/10 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2">
+       <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div><span class="text-xs text-blue-200">Sistem Aktif</span>
+      </div>
+      <p class="text-xs text-blue-200">Versi 1.0.0</p>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="flex-1 overflow-auto">
+    <!-- Dashboard Page -->
+    <div id="page-dashboard" class="page p-6 hidden">
+     <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Dashboard Analisis</h2>
+      <p class="text-gray-500">Ringkasan aktiviti pembacaan murid</p>
+     </div><!-- Stats Cards -->
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="stat-card bg-white rounded-2xl p-5 card-shadow">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+         <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+        </div><span class="text-xs text-green-500 font-medium bg-green-50 px-2 py-1 rounded-full">Aktif</span>
+       </div>
+       <p class="text-2xl font-bold text-gray-800" id="stat-murid">0</p>
+       <p class="text-sm text-gray-500">Jumlah Murid</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-5 card-shadow">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+         <i data-lucide="book-open" class="w-6 h-6 text-purple-600"></i>
+        </div><span class="text-xs text-purple-500 font-medium bg-purple-50 px-2 py-1 rounded-full">Koleksi</span>
+       </div>
+       <p class="text-2xl font-bold text-gray-800" id="stat-buku">0</p>
+       <p class="text-sm text-gray-500">Jumlah Buku</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-5 card-shadow">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+         <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+        </div><span class="text-xs text-green-500 font-medium bg-green-50 px-2 py-1 rounded-full">Rekod</span>
+       </div>
+       <p class="text-2xl font-bold text-gray-800" id="stat-bacaan">0</p>
+       <p class="text-sm text-gray-500">Jumlah Bacaan</p>
+      </div>
+      <div class="stat-card bg-white rounded-2xl p-5 card-shadow">
+       <div class="flex items-center justify-between mb-3">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+         <i data-lucide="percent" class="w-6 h-6 text-orange-600"></i>
+        </div><span class="text-xs text-orange-500 font-medium bg-orange-50 px-2 py-1 rounded-full">Kadar</span>
+       </div>
+       <p class="text-2xl font-bold text-gray-800" id="stat-peratus">0%</p>
+       <p class="text-sm text-gray-500">Peratus Pembacaan</p>
+      </div>
+     </div><!-- Charts Section -->
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Top Readers -->
+      <div class="bg-white rounded-2xl p-6 card-shadow">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800">🏆 Pembaca Terbaik</h3><span class="text-xs text-gray-400">Top 5</span>
+       </div>
+       <div id="top-readers" class="space-y-3">
+        <p class="text-gray-400 text-sm text-center py-4">Tiada data pembacaan</p>
+       </div>
+      </div><!-- Popular Books -->
+      <div class="bg-white rounded-2xl p-6 card-shadow">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800">📚 Buku Popular</h3><span class="text-xs text-gray-400">Top 5</span>
+       </div>
+       <div id="popular-books" class="space-y-3">
+        <p class="text-gray-400 text-sm text-center py-4">Tiada data pembacaan</p>
+       </div>
+      </div>
+     </div><!-- Class Stats & Category Stats -->
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Class Reading Stats -->
+      <div class="bg-white rounded-2xl p-6 card-shadow">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800">🎓 Statistik Mengikut Kelas</h3>
+       </div>
+       <div id="class-stats" class="space-y-3">
+        <p class="text-gray-400 text-sm text-center py-4">Tiada data kelas</p>
+       </div>
+      </div><!-- Category Stats -->
+      <div class="bg-white rounded-2xl p-6 card-shadow">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800">📂 Kategori Diminati</h3>
+       </div>
+       <div id="category-stats" class="space-y-3">
+        <p class="text-gray-400 text-sm text-center py-4">Tiada data kategori</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- Pengurusan Page -->
+    <div id="page-pengurusan" class="page p-6 hidden">
+     <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Pengurusan Murid</h2>
+      <p class="text-gray-500">Daftar dan urus maklumat murid</p>
+     </div><!-- Add Student Form -->
+     <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+      <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5 text-blue-600"></i> Daftar Murid Baru</h3>
+      <form id="form-murid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Murid</label> <input type="text" id="input-nama-murid" placeholder="Masukkan nama murid" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label> <select id="select-tahun" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"> <option value="">Pilih Tahun</option> <option value="1">Tahun 1</option> <option value="2">Tahun 2</option> <option value="3">Tahun 3</option> <option value="4">Tahun 4</option> <option value="5">Tahun 5</option> <option value="6">Tahun 6</option> </select>
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Aliran</label> <select id="select-aliran" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"> <option value="">Pilih Aliran</option> <option value="CEMERLANG">Cemerlang</option> <option value="GEMILANG">Gemilang</option> </select>
+       </div>
+       <div class="md:col-span-3">
+        <button type="submit" id="btn-tambah-murid" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition flex items-center gap-2"> <i data-lucide="plus" class="w-5 h-5"></i> Tambah Murid </button>
+       </div>
+      </form>
+     </div><!-- Student List -->
+     <div class="bg-white rounded-2xl p-6 card-shadow">
+      <div class="flex items-center justify-between mb-4">
+       <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="list" class="w-5 h-5 text-blue-600"></i> Senarai Murid</h3>
+       <div class="flex gap-2">
+        <select id="filter-kelas-murid" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"> <option value="">Semua Kelas</option> </select>
+       </div>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead>
+         <tr class="border-b border-gray-100">
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Bil</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Nama Murid</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Kelas</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Jumlah Bacaan</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Tindakan</th>
+         </tr>
+        </thead>
+        <tbody id="table-murid">
+         <tr>
+          <td colspan="5" class="text-center py-8 text-gray-400">Tiada murid didaftarkan</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Bahan Bacaan Page -->
+    <div id="page-bahan-bacaan" class="page p-6 hidden">
+     <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Bahan Bacaan</h2>
+      <p class="text-gray-500">Urus koleksi bahan bacaan perpustakaan</p>
+     </div><!-- Add Book Form -->
+     <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+      <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="book-plus" class="w-5 h-5 text-purple-600"></i> Tambah Bahan Bacaan</h3>
+      <form id="form-buku" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tajuk Buku</label> <input type="text" id="input-tajuk-buku" placeholder="Masukkan tajuk buku" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition">
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label> <select id="select-kategori" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"> <option value="">Pilih Kategori</option> <option value="Cerita Rakyat">📖 Cerita Rakyat</option> <option value="Sains &amp; Teknologi">🔬 Sains &amp; Teknologi</option> <option value="Matematik">🔢 Matematik</option> <option value="Sejarah">🏛️ Sejarah</option> <option value="Agama &amp; Moral">🕌 Agama &amp; Moral</option> <option value="Bahasa &amp; Sastera">📝 Bahasa &amp; Sastera</option> <option value="Komik &amp; Grafik">🎨 Komik &amp; Grafik</option> <option value="Ensiklopedia">📚 Ensiklopedia</option> <option value="Motivasi">💪 Motivasi</option> <option value="Alam Sekitar">🌿 Alam Sekitar</option> <option value="Biografi">👤 Biografi</option> <option value="Fiksyen">🚀 Fiksyen</option> </select>
+       </div>
+       <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">URL Bahan Bacaan (Opsional)</label> <input type="url" id="input-url-buku" placeholder="https://contoh.com/buku.pdf" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition">
+        <p class="text-xs text-gray-400 mt-1">Masukkan URL untuk bahan bacaan dalam talian (PDF, dokumen, atau laman web)</p>
+       </div>
+       <div class="md:col-span-2">
+        <button type="submit" id="btn-tambah-buku" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-medium transition flex items-center gap-2"> <i data-lucide="plus" class="w-5 h-5"></i> Tambah Buku </button>
+       </div>
+      </form>
+     </div><!-- Book Categories -->
+     <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+      <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="folder" class="w-5 h-5 text-purple-600"></i> Folder Kategori</h3>
+      <div id="kategori-folders" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+       <p class="col-span-full text-gray-400 text-sm text-center py-4">Tiada kategori</p>
+      </div>
+     </div><!-- Book List -->
+     <div class="bg-white rounded-2xl p-6 card-shadow">
+      <div class="flex items-center justify-between mb-4">
+       <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="library" class="w-5 h-5 text-purple-600"></i> Senarai Bahan Bacaan</h3><select id="filter-kategori-buku" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 outline-none"> <option value="">Semua Kategori</option> </select>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full">
+        <thead>
+         <tr class="border-b border-gray-100">
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Bil</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Tajuk Buku</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Kategori</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Jumlah Dibaca</th>
+          <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Tindakan</th>
+         </tr>
+        </thead>
+        <tbody id="table-buku">
+         <tr>
+          <td colspan="5" class="text-center py-8 text-gray-400">Tiada buku didaftarkan</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Rekod Pembacaan Page -->
+    <div id="page-rekod-pembacaan" class="page p-6 hidden">
+     <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">Rekod Pembacaan</h2>
+      <p class="text-gray-500">Rekod aktiviti pembacaan murid</p>
+     </div><!-- Reading Form -->
+     <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+      <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="book-open-check" class="w-5 h-5 text-green-600"></i> Rekod Bacaan Baru</h3>
+      <form id="form-bacaan" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Kelas</label> <select id="select-kelas-bacaan" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"> <option value="">Pilih Kelas Dahulu</option> </select>
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Murid</label> <select id="select-murid-bacaan" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition" disabled> <option value="">Pilih kelas dahulu</option> </select>
+       </div>
+       <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Buku</label> <select id="select-buku-bacaan" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"> <option value="">Pilih Buku</option> </select>
+       </div><!-- Book Preview -->
+       <div id="book-preview" class="md:col-span-2 hidden">
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+         <div class="flex items-center justify-between mb-3">
+          <div>
+           <h4 class="font-bold text-gray-800" id="preview-tajuk">-</h4>
+           <p class="text-sm text-gray-500" id="preview-kategori">-</p>
+          </div><button type="button" id="btn-buka-buku" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2"> <i data-lucide="external-link" class="w-4 h-4"></i> Buka &amp; Baca </button>
+         </div>
+         <div id="reading-confirmation" class="hidden mt-3 pt-3 border-t border-green-200">
+          <label class="flex items-center gap-3 cursor-pointer"> <input type="checkbox" id="checkbox-selesai" class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"> <span class="text-sm font-medium text-gray-700">Saya telah selesai membaca buku ini</span> </label>
+         </div>
+        </div>
+       </div>
+       <div class="md:col-span-2">
+        <button type="submit" id="btn-simpan-bacaan" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-medium transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled> <i data-lucide="save" class="w-5 h-5"></i> Simpan Rekod Bacaan </button>
+       </div>
+      </form>
+     </div><!-- Recent Reading -->
+     <div class="bg-white rounded-2xl p-6 card-shadow">
+      <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="clock" class="w-5 h-5 text-green-600"></i> Bacaan Terkini</h3>
+      <div id="recent-reading" class="space-y-3">
+       <p class="text-gray-400 text-sm text-center py-4">Tiada rekod bacaan</p>
+      </div>
+     </div>
+    </div><!-- Rekod Bacaan Page (Protected) -->
+    <div id="page-rekod-bacaan" class="page p-6 hidden">
+     <div id="rekod-bacaan-login" class="max-w-md mx-auto mt-20">
+      <div class="bg-white rounded-2xl p-8 card-shadow text-center">
+       <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="lock" class="w-8 h-8 text-blue-600"></i>
+       </div>
+       <h3 class="text-xl font-bold text-gray-800 mb-2">Akses Terhad</h3>
+       <p class="text-gray-500 mb-6">Sila masukkan kata laluan untuk akses</p>
+       <form id="form-login-rekod" class="space-y-4">
+        <input type="password" id="password-rekod" placeholder="Kata Laluan" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-center">
+        <p id="error-password-rekod" class="text-red-500 text-sm hidden">Kata laluan salah</p><button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition"> Masuk </button>
+       </form>
+      </div>
+     </div>
+     <div id="rekod-bacaan-content" class="hidden">
+      <div class="flex items-center justify-between mb-6">
+       <div>
+        <h2 class="text-2xl font-bold text-gray-800">Rekod Bacaan</h2>
+        <p class="text-gray-500">Senarai lengkap rekod pembacaan murid</p>
+       </div><button onclick="generatePDF()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition flex items-center gap-2"> <i data-lucide="file-text" class="w-5 h-5"></i> Jana PDF </button>
+      </div><!-- Filters -->
+      <div class="bg-white rounded-2xl p-4 card-shadow mb-6">
+       <div class="flex flex-wrap gap-4">
+        <select id="filter-kelas-rekod" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"> <option value="">Semua Kelas</option> </select> <select id="filter-kategori-rekod" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"> <option value="">Semua Kategori</option> </select> <input type="date" id="filter-tarikh-dari" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"> <input type="date" id="filter-tarikh-hingga" class="px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+       </div>
+      </div><!-- Records Table -->
+      <div class="bg-white rounded-2xl p-6 card-shadow">
+       <div class="overflow-x-auto">
+        <table class="w-full" id="table-rekod-penuh">
+         <thead>
+          <tr class="border-b border-gray-100">
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Bil</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Nama Pembaca</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Kelas</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Tajuk Buku</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Kategori</th>
+           <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Tarikh</th>
+          </tr>
+         </thead>
+         <tbody id="tbody-rekod-penuh">
+          <tr>
+           <td colspan="6" class="text-center py-8 text-gray-400">Tiada rekod</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+    </div><!-- Cetakan Page (Protected) -->
+    <div id="page-cetakan" class="page p-6 hidden">
+     <div id="cetakan-login" class="max-w-md mx-auto mt-20">
+      <div class="bg-white rounded-2xl p-8 card-shadow text-center">
+       <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="lock" class="w-8 h-8 text-purple-600"></i>
+       </div>
+       <h3 class="text-xl font-bold text-gray-800 mb-2">Akses Terhad</h3>
+       <p class="text-gray-500 mb-6">Sila masukkan kata laluan untuk akses</p>
+       <form id="form-login-cetakan" class="space-y-4">
+        <input type="password" id="password-cetakan" placeholder="Kata Laluan" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-center">
+        <p id="error-password-cetakan" class="text-red-500 text-sm hidden">Kata laluan salah</p><button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-medium transition"> Masuk </button>
+       </form>
+      </div>
+     </div>
+     <div id="cetakan-content" class="hidden">
+      <div class="mb-6">
+       <h2 class="text-2xl font-bold text-gray-800">Cetakan Laporan</h2>
+       <p class="text-gray-500">Cetak laporan pembacaan dalam format PDF</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <!-- Print Options -->
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('all')">
+        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="file-text" class="w-7 h-7 text-blue-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Laporan Penuh</h3>
+        <p class="text-sm text-gray-500">Cetak semua rekod pembacaan</p>
+       </div>
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('class')">
+        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="users" class="w-7 h-7 text-green-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Laporan Mengikut Kelas</h3>
+        <p class="text-sm text-gray-500">Cetak rekod mengikut kelas</p>
+       </div>
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('top')">
+        <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="trophy" class="w-7 h-7 text-yellow-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Laporan Pembaca Terbaik</h3>
+        <p class="text-sm text-gray-500">Cetak ranking pembaca</p>
+       </div>
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('books')">
+        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="book-open" class="w-7 h-7 text-purple-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Laporan Buku Popular</h3>
+        <p class="text-sm text-gray-500">Cetak statistik buku</p>
+       </div>
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('category')">
+        <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="folder" class="w-7 h-7 text-orange-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Laporan Mengikut Kategori</h3>
+        <p class="text-sm text-gray-500">Cetak statistik kategori</p>
+       </div>
+       <div class="bg-white rounded-2xl p-6 card-shadow hover:shadow-lg transition cursor-pointer" onclick="printReport('summary')">
+        <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+         <i data-lucide="bar-chart-3" class="w-7 h-7 text-red-600"></i>
+        </div>
+        <h3 class="font-bold text-gray-800 mb-2">Ringkasan Statistik</h3>
+        <p class="text-sm text-gray-500">Cetak ringkasan keseluruhan</p>
+       </div>
+      </div><!-- Print Preview Area -->
+      <div id="print-preview" class="mt-6 bg-white rounded-2xl p-6 card-shadow hidden">
+       <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800">Pratonton Cetakan</h3><button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition flex items-center gap-2"> <i data-lucide="printer" class="w-5 h-5"></i> Cetak </button>
+       </div>
+       <div id="print-content" class="border rounded-xl p-6"></div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+   <span id="toast-message">Mesej</span>
+  </div><!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center">
+   <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 card-shadow">
+    <div class="text-center">
+     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <i data-lucide="trash-2" class="w-8 h-8 text-red-600"></i>
+     </div>
+     <h3 class="text-lg font-bold text-gray-800 mb-2">Padam Data?</h3>
+     <p class="text-gray-500 mb-6" id="delete-message">Adakah anda pasti mahu memadam data ini?</p>
+     <div id="delete-password-section" class="hidden mb-4"><label class="block text-sm font-medium text-gray-700 mb-2 text-left">Kata Laluan Admin</label> <input type="password" id="delete-password-input" placeholder="Masukkan kata laluan" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition">
+      <p id="delete-error-msg" class="text-red-500 text-sm mt-2 hidden"></p>
+     </div>
+     <div class="flex gap-3">
+      <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2 border border-gray-200 rounded-xl font-medium text-gray-600 hover:bg-gray-50 transition">Batal</button> <button id="btn-confirm-delete" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition">Padam</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Global State
+    let allData = [];
+    let muridList = [];
+    let bukuList = [];
+    let bacaanList = [];
+    let currentDeleteItem = null;
+    let authenticatedPages = { 'rekod-bacaan': false, 'cetakan': false };
+    const ADMIN_PASSWORD = 'admin123';
+
+    // Default Config
+    const defaultConfig = {
+      school_name: 'SK BUKIT CERMIN',
+      app_title: 'SISTEM NILAM SK BUKIT CERMIN'
+    };
+
+    // Data Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allData = data;
+        muridList = data.filter(d => d.type === 'murid');
+        bukuList = data.filter(d => d.type === 'buku');
+        bacaanList = data.filter(d => d.type === 'bacaan');
+        
+        updateAllUI();
+      }
+    };
+
+    // Initialize SDKs
+    async function initApp() {
+      // Init Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById('school-name').textContent = config.school_name || defaultConfig.school_name;
+            document.getElementById('app-title').textContent = config.app_title || defaultConfig.app_title;
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['school_name', config.school_name || defaultConfig.school_name],
+            ['app_title', config.app_title || defaultConfig.app_title]
+          ])
+        });
+      }
+
+      // Init Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          showToast('Gagal memuat data', 'error');
+        }
+      }
+
+      lucide.createIcons();
+      showPage('dashboard');
+    }
+
+    // Page Navigation
+    function showPage(pageName) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById(`page-${pageName}`).classList.remove('hidden');
+      document.getElementById(`nav-${pageName}`).classList.add('active');
+      
+      // Check authentication for protected pages
+      if ((pageName === 'rekod-bacaan' || pageName === 'cetakan') && !authenticatedPages[pageName]) {
+        // Show login form
+        if (pageName === 'rekod-bacaan') {
+          document.getElementById('rekod-bacaan-login').classList.remove('hidden');
+          document.getElementById('rekod-bacaan-content').classList.add('hidden');
+        } else {
+          document.getElementById('cetakan-login').classList.remove('hidden');
+          document.getElementById('cetakan-content').classList.add('hidden');
+        }
+      }
+      
+      updateAllUI();
+    }
+
+    // Toast Notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = message;
+      toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-lg transform transition-all duration-300 z-50 ${type === 'error' ? 'bg-red-600' : 'bg-green-600'} text-white`;
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+      
+      setTimeout(() => {
+        toast.style.transform = 'translateY(20px)';
+        toast.style.opacity = '0';
+      }, 3000);
+    }
+
+    // Delete Modal
+    function showDeleteModal(item, type, message) {
+      currentDeleteItem = { item, type };
+      document.getElementById('delete-message').textContent = message;
+      document.getElementById('delete-password-section').classList.remove('hidden');
+      document.getElementById('delete-password-input').value = '';
+      document.getElementById('delete-error-msg').classList.add('hidden');
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+      document.getElementById('delete-password-section').classList.add('hidden');
+      document.getElementById('delete-password-input').value = '';
+      document.getElementById('delete-error-msg').classList.add('hidden');
+      currentDeleteItem = null;
+    }
+
+    // Update All UI
+    function updateAllUI() {
+      updateMuridTable();
+      updateBukuTable();
+      updateKategoriFolder();
+      updateFilters();
+      updateDashboard();
+      updateRecentReading();
+      updateRekodBacaanTable();
+    }
+
+    // Generate Unique ID
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    // Get Full Class Name
+    function getKelasName(tahun, aliran) {
+      return `Tahun ${tahun} ${aliran}`;
+    }
+
+    // MURID FUNCTIONS
+    document.getElementById('form-murid').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const nama = document.getElementById('input-nama-murid').value.trim();
+      const tahun = document.getElementById('select-tahun').value;
+      const aliran = document.getElementById('select-aliran').value;
+      
+      if (!nama || !tahun || !aliran) {
+        showToast('Sila lengkapkan semua maklumat', 'error');
+        return;
+      }
+      
+      if (allData.length >= 999) {
+        showToast('Had maksimum 999 rekod telah dicapai', 'error');
+        return;
+      }
+      
+      const btn = document.getElementById('btn-tambah-murid');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Menyimpan...';
+      
+      const result = await window.dataSdk.create({
+        type: 'murid',
+        id: generateId(),
+        nama: nama,
+        kelas: getKelasName(tahun, aliran)
+      });
+      
+      if (result.isOk) {
+        showToast('Murid berjaya didaftarkan');
+        document.getElementById('form-murid').reset();
+      } else {
+        showToast('Gagal mendaftar murid', 'error');
+      }
+      
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Tambah Murid';
+      lucide.createIcons();
+    });
+
+    function updateMuridTable() {
+      const tbody = document.getElementById('table-murid');
+      const filterKelas = document.getElementById('filter-kelas-murid').value;
+      
+      let filtered = muridList;
+      if (filterKelas) {
+        filtered = muridList.filter(m => m.kelas === filterKelas);
+      }
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-400">Tiada murid didaftarkan</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = filtered.map((murid, i) => {
+        const bacaanCount = bacaanList.filter(b => b.murid_id === murid.id).length;
+        return `
+          <tr class="table-row border-b border-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-600">${i + 1}</td>
+            <td class="py-3 px-4 text-sm font-medium text-gray-800">${murid.nama}</td>
+            <td class="py-3 px-4"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">${murid.kelas}</span></td>
+            <td class="py-3 px-4 text-sm text-gray-600">${bacaanCount} buku</td>
+            <td class="py-3 px-4">
+              <button onclick="deleteMurid('${murid.__backendId}')" class="text-red-500 hover:text-red-700 transition">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    async function deleteMurid(backendId) {
+      const murid = muridList.find(m => m.__backendId === backendId);
+      if (murid) {
+        showDeleteModal(murid, 'murid', `Padam murid "${murid.nama}"?`);
+      }
+    }
+
+    // BUKU FUNCTIONS
+    document.getElementById('form-buku').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const tajuk = document.getElementById('input-tajuk-buku').value.trim();
+      const kategori = document.getElementById('select-kategori').value;
+      const url = document.getElementById('input-url-buku').value.trim();
+      
+      if (!tajuk || !kategori) {
+        showToast('Sila lengkapkan tajuk dan kategori', 'error');
+        return;
+      }
+      
+      if (allData.length >= 999) {
+        showToast('Had maksimum 999 rekod telah dicapai', 'error');
+        return;
+      }
+      
+      const btn = document.getElementById('btn-tambah-buku');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Menyimpan...';
+      
+      const result = await window.dataSdk.create({
+        type: 'buku',
+        id: generateId(),
+        tajuk: tajuk,
+        kategori: kategori,
+        url: url || ''
+      });
+      
+      if (result.isOk) {
+        showToast('Buku berjaya ditambah');
+        document.getElementById('form-buku').reset();
+      } else {
+        showToast('Gagal menambah buku', 'error');
+      }
+      
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Tambah Buku';
+      lucide.createIcons();
+    });
+
+    function updateBukuTable() {
+      const tbody = document.getElementById('table-buku');
+      const filterKategori = document.getElementById('filter-kategori-buku').value;
+      
+      let filtered = bukuList;
+      if (filterKategori) {
+        filtered = bukuList.filter(b => b.kategori === filterKategori);
+      }
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-400">Tiada buku didaftarkan</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = filtered.map((buku, i) => {
+        const bacaanCount = bacaanList.filter(b => b.buku_id === buku.id).length;
+        return `
+          <tr class="table-row border-b border-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-600">${i + 1}</td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-800">${buku.tajuk}</span>
+                ${buku.url ? '<i data-lucide="link" class="w-3 h-3 text-blue-500"></i>' : ''}
+              </div>
+            </td>
+            <td class="py-3 px-4"><span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">${buku.kategori}</span></td>
+            <td class="py-3 px-4 text-sm text-gray-600">${bacaanCount} kali</td>
+            <td class="py-3 px-4 flex gap-2">
+              ${buku.url ? `<a href="${buku.url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700 transition"><i data-lucide="external-link" class="w-4 h-4"></i></a>` : ''}
+              <button onclick="deleteBuku('${buku.__backendId}')" class="text-red-500 hover:text-red-700 transition">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    function updateKategoriFolder() {
+      const container = document.getElementById('kategori-folders');
+      const categories = [...new Set(bukuList.map(b => b.kategori))];
+      
+      if (categories.length === 0) {
+        container.innerHTML = '<p class="col-span-full text-gray-400 text-sm text-center py-4">Tiada kategori</p>';
+        return;
+      }
+      
+      container.innerHTML = categories.map(cat => {
+        const count = bukuList.filter(b => b.kategori === cat).length;
+        return `
+          <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-4 text-center hover:shadow-md transition cursor-pointer" onclick="filterByCategory('${cat}')">
+            <div class="text-3xl mb-2">📁</div>
+            <p class="text-sm font-medium text-gray-800 truncate">${cat}</p>
+            <p class="text-xs text-gray-500">${count} buku</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterByCategory(category) {
+      document.getElementById('filter-kategori-buku').value = category;
+      updateBukuTable();
+    }
+
+    async function deleteBuku(backendId) {
+      const buku = bukuList.find(b => b.__backendId === backendId);
+      if (buku) {
+        showDeleteModal(buku, 'buku', `Padam buku "${buku.tajuk}"?`);
+      }
+    }
+
+    // BACAAN FUNCTIONS
+    document.getElementById('select-kelas-bacaan').addEventListener('change', function() {
+      const kelas = this.value;
+      const selectMurid = document.getElementById('select-murid-bacaan');
+      
+      if (!kelas) {
+        selectMurid.disabled = true;
+        selectMurid.innerHTML = '<option value="">Pilih kelas dahulu</option>';
+        return;
+      }
+      
+      const muridInKelas = muridList.filter(m => m.kelas === kelas);
+      selectMurid.disabled = false;
+      selectMurid.innerHTML = '<option value="">Pilih Murid</option>' + 
+        muridInKelas.map(m => `<option value="${m.id}">${m.nama}</option>`).join('');
+    });
+
+    document.getElementById('select-buku-bacaan').addEventListener('change', function() {
+      const bukuId = this.value;
+      const preview = document.getElementById('book-preview');
+      const btnSimpan = document.getElementById('btn-simpan-bacaan');
+      
+      if (!bukuId) {
+        preview.classList.add('hidden');
+        btnSimpan.disabled = true;
+        return;
+      }
+      
+      const buku = bukuList.find(b => b.id === bukuId);
+      if (buku) {
+        document.getElementById('preview-tajuk').textContent = buku.tajuk;
+        document.getElementById('preview-kategori').textContent = buku.kategori;
+        preview.classList.remove('hidden');
+        
+        const btnBuka = document.getElementById('btn-buka-buku');
+        if (buku.url) {
+          btnBuka.classList.remove('hidden');
+          btnBuka.onclick = () => {
+            window.open(buku.url, '_blank', 'noopener,noreferrer');
+            document.getElementById('reading-confirmation').classList.remove('hidden');
+          };
+        } else {
+          btnBuka.classList.add('hidden');
+          document.getElementById('reading-confirmation').classList.remove('hidden');
+        }
+      }
+    });
+
+    document.getElementById('checkbox-selesai').addEventListener('change', function() {
+      document.getElementById('btn-simpan-bacaan').disabled = !this.checked;
+    });
+
+    document.getElementById('form-bacaan').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const muridId = document.getElementById('select-murid-bacaan').value;
+      const bukuId = document.getElementById('select-buku-bacaan').value;
+      const selesai = document.getElementById('checkbox-selesai').checked;
+      
+      if (!muridId || !bukuId || !selesai) {
+        showToast('Sila lengkapkan semua maklumat', 'error');
+        return;
+      }
+      
+      if (allData.length >= 999) {
+        showToast('Had maksimum 999 rekod telah dicapai', 'error');
+        return;
+      }
+      
+      const btn = document.getElementById('btn-simpan-bacaan');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> Menyimpan...';
+      
+      const murid = muridList.find(m => m.id === muridId);
+      const buku = bukuList.find(b => b.id === bukuId);
+      
+      const result = await window.dataSdk.create({
+        type: 'bacaan',
+        id: generateId(),
+        murid_id: muridId,
+        nama: murid?.nama || '',
+        kelas: murid?.kelas || '',
+        buku_id: bukuId,
+        tajuk: buku?.tajuk || '',
+        kategori: buku?.kategori || '',
+        tarikh: new Date().toISOString(),
+        status: 'selesai'
+      });
+      
+      if (result.isOk) {
+        showToast('Rekod bacaan berjaya disimpan');
+        document.getElementById('form-bacaan').reset();
+        document.getElementById('book-preview').classList.add('hidden');
+        document.getElementById('reading-confirmation').classList.add('hidden');
+        document.getElementById('select-murid-bacaan').disabled = true;
+        document.getElementById('select-murid-bacaan').innerHTML = '<option value="">Pilih kelas dahulu</option>';
+      } else {
+        showToast('Gagal menyimpan rekod', 'error');
+      }
+      
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="save" class="w-5 h-5"></i> Simpan Rekod Bacaan';
+      lucide.createIcons();
+    });
+
+    function updateRecentReading() {
+      const container = document.getElementById('recent-reading');
+      const recent = [...bacaanList].sort((a, b) => new Date(b.tarikh) - new Date(a.tarikh)).slice(0, 5);
+      
+      if (recent.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Tiada rekod bacaan</p>';
+        return;
+      }
+      
+      container.innerHTML = recent.map(b => {
+        const date = new Date(b.tarikh);
+        const formattedDate = date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+        return `
+          <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
+            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="book-check" class="w-5 h-5 text-green-600"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">${b.nama}</p>
+              <p class="text-xs text-gray-500">${b.tajuk}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-gray-400">${formattedDate}</p>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">${b.kelas}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    // FILTERS
+    function updateFilters() {
+      const classes = [...new Set(muridList.map(m => m.kelas))].sort();
+      const categories = [...new Set(bukuList.map(b => b.kategori))].sort();
+      
+      // Kelas filters
+      const kelasOptions = '<option value="">Semua Kelas</option>' + classes.map(k => `<option value="${k}">${k}</option>`).join('');
+      document.getElementById('filter-kelas-murid').innerHTML = kelasOptions;
+      document.getElementById('select-kelas-bacaan').innerHTML = '<option value="">Pilih Kelas Dahulu</option>' + classes.map(k => `<option value="${k}">${k}</option>`).join('');
+      
+      if (document.getElementById('filter-kelas-rekod')) {
+        document.getElementById('filter-kelas-rekod').innerHTML = kelasOptions;
+      }
+      
+      // Kategori filters
+      const kategoriOptions = '<option value="">Semua Kategori</option>' + categories.map(k => `<option value="${k}">${k}</option>`).join('');
+      document.getElementById('filter-kategori-buku').innerHTML = kategoriOptions;
+      
+      if (document.getElementById('filter-kategori-rekod')) {
+        document.getElementById('filter-kategori-rekod').innerHTML = kategoriOptions;
+      }
+      
+      // Buku dropdown
+      document.getElementById('select-buku-bacaan').innerHTML = '<option value="">Pilih Buku</option>' + bukuList.map(b => `<option value="${b.id}">${b.tajuk} (${b.kategori})</option>`).join('');
+    }
+
+    // Filter event listeners
+    document.getElementById('filter-kelas-murid').addEventListener('change', updateMuridTable);
+    document.getElementById('filter-kategori-buku').addEventListener('change', updateBukuTable);
+
+    // DASHBOARD
+    function updateDashboard() {
+      // Stats
+      document.getElementById('stat-murid').textContent = muridList.length;
+      document.getElementById('stat-buku').textContent = bukuList.length;
+      document.getElementById('stat-bacaan').textContent = bacaanList.length;
+      
+      const peratus = muridList.length > 0 ? Math.round((bacaanList.length / (muridList.length * bukuList.length || 1)) * 100) : 0;
+      document.getElementById('stat-peratus').textContent = Math.min(peratus, 100) + '%';
+      
+      // Top Readers
+      const readerStats = {};
+      bacaanList.forEach(b => {
+        if (!readerStats[b.murid_id]) {
+          readerStats[b.murid_id] = { nama: b.nama, kelas: b.kelas, count: 0 };
+        }
+        readerStats[b.murid_id].count++;
+      });
+      
+      const topReaders = Object.values(readerStats).sort((a, b) => b.count - a.count).slice(0, 5);
+      const topReadersContainer = document.getElementById('top-readers');
+      
+      if (topReaders.length === 0) {
+        topReadersContainer.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Tiada data pembacaan</p>';
+      } else {
+        const maxCount = topReaders[0]?.count || 1;
+        topReadersContainer.innerHTML = topReaders.map((r, i) => `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-yellow-100 text-yellow-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-blue-50 text-blue-600'}">
+              ${i + 1}
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">${r.nama}</p>
+              <p class="text-xs text-gray-500">${r.kelas}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-bold text-gray-800">${r.count}</p>
+              <div class="w-20 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 progress-bar" style="width: ${(r.count / maxCount) * 100}%"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      // Popular Books
+      const bookStats = {};
+      bacaanList.forEach(b => {
+        if (!bookStats[b.buku_id]) {
+          bookStats[b.buku_id] = { tajuk: b.tajuk, kategori: b.kategori, count: 0 };
+        }
+        bookStats[b.buku_id].count++;
+      });
+      
+      const popularBooks = Object.values(bookStats).sort((a, b) => b.count - a.count).slice(0, 5);
+      const popularBooksContainer = document.getElementById('popular-books');
+      
+      if (popularBooks.length === 0) {
+        popularBooksContainer.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Tiada data pembacaan</p>';
+      } else {
+        const maxBookCount = popularBooks[0]?.count || 1;
+        popularBooksContainer.innerHTML = popularBooks.map((b, i) => `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <span class="text-sm">📚</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800 truncate">${b.tajuk}</p>
+              <p class="text-xs text-gray-500">${b.kategori}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-bold text-gray-800">${b.count}</p>
+              <div class="w-20 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-purple-500 progress-bar" style="width: ${(b.count / maxBookCount) * 100}%"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      // Class Stats
+      const classStats = {};
+      bacaanList.forEach(b => {
+        if (!classStats[b.kelas]) {
+          classStats[b.kelas] = 0;
+        }
+        classStats[b.kelas]++;
+      });
+      
+      const sortedClasses = Object.entries(classStats).sort((a, b) => b[1] - a[1]);
+      const classStatsContainer = document.getElementById('class-stats');
+      
+      if (sortedClasses.length === 0) {
+        classStatsContainer.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Tiada data kelas</p>';
+      } else {
+        const maxClassCount = sortedClasses[0]?.[1] || 1;
+        classStatsContainer.innerHTML = sortedClasses.map(([kelas, count]) => `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">${kelas}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 progress-bar" style="width: ${(count / maxClassCount) * 100}%"></div>
+              </div>
+              <span class="text-sm font-bold text-gray-800 w-8 text-right">${count}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      // Category Stats
+      const categoryStats = {};
+      bacaanList.forEach(b => {
+        if (!categoryStats[b.kategori]) {
+          categoryStats[b.kategori] = 0;
+        }
+        categoryStats[b.kategori]++;
+      });
+      
+      const sortedCategories = Object.entries(categoryStats).sort((a, b) => b[1] - a[1]);
+      const categoryStatsContainer = document.getElementById('category-stats');
+      
+      if (sortedCategories.length === 0) {
+        categoryStatsContainer.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Tiada data kategori</p>';
+      } else {
+        const maxCatCount = sortedCategories[0]?.[1] || 1;
+        categoryStatsContainer.innerHTML = sortedCategories.map(([cat, count]) => `
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+              <span class="text-sm">📁</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">${cat}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-500 progress-bar" style="width: ${(count / maxCatCount) * 100}%"></div>
+              </div>
+              <span class="text-sm font-bold text-gray-800 w-8 text-right">${count}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      lucide.createIcons();
+    }
+
+    // REKOD BACAAN TABLE
+    function updateRekodBacaanTable() {
+      const tbody = document.getElementById('tbody-rekod-penuh');
+      if (!tbody) return;
+      
+      const filterKelas = document.getElementById('filter-kelas-rekod')?.value || '';
+      const filterKategori = document.getElementById('filter-kategori-rekod')?.value || '';
+      const filterDari = document.getElementById('filter-tarikh-dari')?.value || '';
+      const filterHingga = document.getElementById('filter-tarikh-hingga')?.value || '';
+      
+      let filtered = [...bacaanList];
+      
+      if (filterKelas) {
+        filtered = filtered.filter(b => b.kelas === filterKelas);
+      }
+      if (filterKategori) {
+        filtered = filtered.filter(b => b.kategori === filterKategori);
+      }
+      if (filterDari) {
+        filtered = filtered.filter(b => new Date(b.tarikh) >= new Date(filterDari));
+      }
+      if (filterHingga) {
+        filtered = filtered.filter(b => new Date(b.tarikh) <= new Date(filterHingga + 'T23:59:59'));
+      }
+      
+      filtered.sort((a, b) => new Date(b.tarikh) - new Date(a.tarikh));
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-400">Tiada rekod</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = filtered.map((b, i) => {
+        const date = new Date(b.tarikh);
+        const formattedDate = date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+        return `
+          <tr class="table-row border-b border-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-600">${i + 1}</td>
+            <td class="py-3 px-4 text-sm font-medium text-gray-800">${b.nama}</td>
+            <td class="py-3 px-4"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">${b.kelas}</span></td>
+            <td class="py-3 px-4 text-sm text-gray-800">${b.tajuk}</td>
+            <td class="py-3 px-4"><span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">${b.kategori}</span></td>
+            <td class="py-3 px-4 text-sm text-gray-600">${formattedDate}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Filter listeners for rekod
+    document.getElementById('filter-kelas-rekod')?.addEventListener('change', updateRekodBacaanTable);
+    document.getElementById('filter-kategori-rekod')?.addEventListener('change', updateRekodBacaanTable);
+    document.getElementById('filter-tarikh-dari')?.addEventListener('change', updateRekodBacaanTable);
+    document.getElementById('filter-tarikh-hingga')?.addEventListener('change', updateRekodBacaanTable);
+
+    // PASSWORD AUTHENTICATION
+    document.getElementById('form-login-rekod').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password-rekod').value;
+      
+      if (password === ADMIN_PASSWORD) {
+        authenticatedPages['rekod-bacaan'] = true;
+        document.getElementById('rekod-bacaan-login').classList.add('hidden');
+        document.getElementById('rekod-bacaan-content').classList.remove('hidden');
+        document.getElementById('error-password-rekod').classList.add('hidden');
+        updateRekodBacaanTable();
+      } else {
+        document.getElementById('error-password-rekod').classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('form-login-cetakan').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password-cetakan').value;
+      
+      if (password === ADMIN_PASSWORD) {
+        authenticatedPages['cetakan'] = true;
+        document.getElementById('cetakan-login').classList.add('hidden');
+        document.getElementById('cetakan-content').classList.remove('hidden');
+        document.getElementById('error-password-cetakan').classList.add('hidden');
+      } else {
+        document.getElementById('error-password-cetakan').classList.remove('hidden');
+      }
+    });
+
+    // DELETE CONFIRMATION
+    document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+      if (!currentDeleteItem) return;
+      
+      const passwordInput = document.getElementById('delete-password-input').value;
+      const errorMsg = document.getElementById('delete-error-msg');
+      
+      // Check if password input is empty
+      if (!passwordInput) {
+        errorMsg.classList.remove('hidden');
+        errorMsg.textContent = 'Sila masukkan kata laluan';
+        return;
+      }
+      
+      if (passwordInput !== ADMIN_PASSWORD) {
+        errorMsg.classList.remove('hidden');
+        errorMsg.textContent = 'Kata laluan salah. Hanya admin dapat memadam data.';
+        return;
+      }
+      
+      const btn = document.getElementById('btn-confirm-delete');
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" class="w-5 h-5 animate-spin inline"></i> Memadam...';
+      
+      const result = await window.dataSdk.delete(currentDeleteItem.item);
+      
+      if (result.isOk) {
+        showToast('Data berjaya dipadam');
+        closeDeleteModal();
+      } else {
+        showToast('Gagal memadam data', 'error');
+        btn.disabled = false;
+        btn.innerHTML = 'Padam';
+      }
+      
+      lucide.createIcons();
+    });
+
+    // PRINT FUNCTIONS
+    function generatePDF() {
+      printReport('all');
+    }
+
+    function printReport(type) {
+      const printContent = document.getElementById('print-content');
+      const printPreview = document.getElementById('print-preview');
+      
+      let html = `
+        <div style="font-family: 'Plus Jakarta Sans', sans-serif;">
+          <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1e3a5f; padding-bottom: 15px;">
+            <h1 style="color: #1e3a5f; margin: 0; font-size: 20px;">SISTEM NILAM</h1>
+            <h2 style="color: #2d5a87; margin: 5px 0; font-size: 16px;">SK BUKIT CERMIN</h2>
+            <p style="color: #666; font-size: 12px;">Laporan dijana pada: ${new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+          </div>
+      `;
+      
+      switch(type) {
+        case 'all':
+          html += generateFullReport();
+          break;
+        case 'class':
+          html += generateClassReport();
+          break;
+        case 'top':
+          html += generateTopReadersReport();
+          break;
+        case 'books':
+          html += generateBooksReport();
+          break;
+        case 'category':
+          html += generateCategoryReport();
+          break;
+        case 'summary':
+          html += generateSummaryReport();
+          break;
+      }
+      
+      html += '</div>';
+      printContent.innerHTML = html;
+      printPreview.classList.remove('hidden');
+    }
+
+    function generateFullReport() {
+      const sorted = [...bacaanList].sort((a, b) => new Date(b.tarikh) - new Date(a.tarikh));
+      return `
+        <h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Laporan Rekod Bacaan Penuh</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Bil</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nama</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Kelas</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tajuk Buku</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Kategori</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tarikh</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map((b, i) => `
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">${i + 1}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.nama}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.kelas}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.tajuk}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.kategori}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${new Date(b.tarikh).toLocaleDateString('ms-MY')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <p style="margin-top: 15px; font-size: 12px; color: #666;">Jumlah rekod: ${sorted.length}</p>
+      `;
+    }
+
+    function generateClassReport() {
+      const classData = {};
+      bacaanList.forEach(b => {
+        if (!classData[b.kelas]) classData[b.kelas] = [];
+        classData[b.kelas].push(b);
+      });
+      
+      let html = '<h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Laporan Mengikut Kelas</h3>';
+      
+      Object.keys(classData).sort().forEach(kelas => {
+        const records = classData[kelas];
+        html += `
+          <h4 style="color: #2d5a87; margin-top: 20px;">${kelas} (${records.length} bacaan)</h4>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 15px;">
+            <thead>
+              <tr style="background: #f8fafc;">
+                <th style="border: 1px solid #ddd; padding: 6px; text-align: left;">Nama</th>
+                <th style="border: 1px solid #ddd; padding: 6px; text-align: left;">Tajuk Buku</th>
+                <th style="border: 1px solid #ddd; padding: 6px; text-align: left;">Tarikh</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${records.map(b => `
+                <tr>
+                  <td style="border: 1px solid #ddd; padding: 6px;">${b.nama}</td>
+                  <td style="border: 1px solid #ddd; padding: 6px;">${b.tajuk}</td>
+                  <td style="border: 1px solid #ddd; padding: 6px;">${new Date(b.tarikh).toLocaleDateString('ms-MY')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      });
+      
+      return html;
+    }
+
+    function generateTopReadersReport() {
+      const readerStats = {};
+      bacaanList.forEach(b => {
+        const key = b.murid_id;
+        if (!readerStats[key]) {
+          readerStats[key] = { nama: b.nama, kelas: b.kelas, count: 0 };
+        }
+        readerStats[key].count++;
+      });
+      
+      const sorted = Object.values(readerStats).sort((a, b) => b.count - a.count);
+      
+      return `
+        <h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">🏆 Laporan Pembaca Terbaik</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Ranking</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nama</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Kelas</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Jumlah Bacaan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map((r, i) => `
+              <tr ${i < 3 ? 'style="background: #fffbeb;"' : ''}>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: bold;">${i + 1}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${r.nama}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${r.kelas}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: bold;">${r.count}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function generateBooksReport() {
+      const bookStats = {};
+      bacaanList.forEach(b => {
+        if (!bookStats[b.buku_id]) {
+          bookStats[b.buku_id] = { tajuk: b.tajuk, kategori: b.kategori, count: 0 };
+        }
+        bookStats[b.buku_id].count++;
+      });
+      
+      const sorted = Object.values(bookStats).sort((a, b) => b.count - a.count);
+      
+      return `
+        <h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">📚 Laporan Buku Popular</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Ranking</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Tajuk Buku</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Kategori</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Jumlah Dibaca</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map((b, i) => `
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${i + 1}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.tajuk}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${b.kategori}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: bold;">${b.count}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function generateCategoryReport() {
+      const catStats = {};
+      bacaanList.forEach(b => {
+        if (!catStats[b.kategori]) catStats[b.kategori] = 0;
+        catStats[b.kategori]++;
+      });
+      
+      const sorted = Object.entries(catStats).sort((a, b) => b[1] - a[1]);
+      const total = bacaanList.length;
+      
+      return `
+        <h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">📁 Laporan Mengikut Kategori</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <thead>
+            <tr style="background: #f8fafc;">
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Kategori</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Jumlah Bacaan</th>
+              <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Peratus</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map(([cat, count]) => `
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">${cat}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${count}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${total > 0 ? ((count / total) * 100).toFixed(1) : 0}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function generateSummaryReport() {
+      const readerStats = {};
+      bacaanList.forEach(b => {
+        if (!readerStats[b.murid_id]) {
+          readerStats[b.murid_id] = { nama: b.nama, kelas: b.kelas, count: 0 };
+        }
+        readerStats[b.murid_id].count++;
+      });
+      const topReader = Object.values(readerStats).sort((a, b) => b.count - a.count)[0];
+      
+      const bookStats = {};
+      bacaanList.forEach(b => {
+        if (!bookStats[b.buku_id]) {
+          bookStats[b.buku_id] = { tajuk: b.tajuk, count: 0 };
+        }
+        bookStats[b.buku_id].count++;
+      });
+      const topBook = Object.values(bookStats).sort((a, b) => b.count - a.count)[0];
+      
+      const catStats = {};
+      bacaanList.forEach(b => {
+        if (!catStats[b.kategori]) catStats[b.kategori] = 0;
+        catStats[b.kategori]++;
+      });
+      const topCategory = Object.entries(catStats).sort((a, b) => b[1] - a[1])[0];
+      
+      return `
+        <h3 style="color: #1e3a5f; border-bottom: 1px solid #ddd; padding-bottom: 10px;">📊 Ringkasan Statistik NILAM</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+          <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <p style="margin: 0; color: #666; font-size: 12px;">Jumlah Murid Berdaftar</p>
+            <p style="margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #1e3a5f;">${muridList.length}</p>
+          </div>
+          <div style="background: #faf5ff; padding: 15px; border-radius: 8px; border-left: 4px solid #a855f7;">
+            <p style="margin: 0; color: #666; font-size: 12px;">Jumlah Buku Berdaftar</p>
+            <p style="margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #1e3a5f;">${bukuList.length}</p>
+          </div>
+          <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e;">
+            <p style="margin: 0; color: #666; font-size: 12px;">Jumlah Rekod Bacaan</p>
+            <p style="margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #1e3a5f;">${bacaanList.length}</p>
+          </div>
+          <div style="background: #fffbeb; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+            <p style="margin: 0; color: #666; font-size: 12px;">Purata Bacaan Per Murid</p>
+            <p style="margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #1e3a5f;">${muridList.length > 0 ? (bacaanList.length / muridList.length).toFixed(1) : 0}</p>
+          </div>
+        </div>
+        
+        <h4 style="color: #2d5a87; margin-top: 25px;">🏆 Pencapaian Tertinggi</h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;">
+          <tr style="background: #fffbeb;">
+            <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold;">Pembaca Terbaik</td>
+            <td style="border: 1px solid #ddd; padding: 10px;">${topReader ? `${topReader.nama} (${topReader.kelas}) - ${topReader.count} buku` : 'Tiada data'}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold;">Buku Paling Popular</td>
+            <td style="border: 1px solid #ddd; padding: 10px;">${topBook ? `${topBook.tajuk} - ${topBook.count} kali dibaca` : 'Tiada data'}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #ddd; padding: 10px; font-weight: bold;">Kategori Diminati</td>
+            <td style="border: 1px solid #ddd; padding: 10px;">${topCategory ? `${topCategory[0]} - ${topCategory[1]} bacaan` : 'Tiada data'}</td>
+          </tr>
+        </table>
+      `;
+    }
+
+    // Initialize app
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e53ab10779c1685',t:'MTc3NTAwNTM0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
